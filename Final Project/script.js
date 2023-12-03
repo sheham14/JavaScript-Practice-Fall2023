@@ -2,17 +2,51 @@ const $ = selector => document.querySelector(selector);
 
 var mineField = [];
 
-var rows = 9;
-var columns = 9;
+var rows;
+var columns;
 
-var numMines = 10
+var numMines;
 var minesLocation = [];
 
 var tilesRevealed = 0;
-
-var flagEnabled = false;
-
 var gameOver = false;
+
+
+function setDifficulty(){
+    document.getElementById("easyBtn").addEventListener("click", function(){
+        rows = 9;
+        columns = 9;
+        numMines = 10;
+        document.getElementById("mineField").style.height = 450 + "px";
+        document.getElementById("mineField").style.width = 450 + "px";
+        startGame();
+        setMines();
+        setTimer();
+    })
+    document.getElementById("mediumBtn").addEventListener("click", function(){
+        rows = 16;
+        columns = 16;
+        numMines = 40;
+        document.getElementById("mineField").style.height = 800 + "px";
+        document.getElementById("mineField").style.width = 800 + "px";
+        startGame();
+        setMines();
+        setTimer();
+    })
+    document.getElementById("hardBtn").addEventListener("click", function(){
+        rows = 30;
+        columns = 16;
+        numMines = 99;
+        document.getElementById("mineField").style.height = 1500 + "px";
+        document.getElementById("mineField").style.width = 800 + "px";
+        startGame();
+        setMines();
+        setTimer();
+    })
+   
+
+}
+
 
 function startGame(){
     document.getElementById("tilesRevealed").innerHTML = tilesRevealed;
@@ -30,7 +64,6 @@ function startGame(){
         mineField.push(row);
         
     }
-console.log(mineField)
 }
 
 function squareClicked(){
@@ -39,15 +72,7 @@ function squareClicked(){
         return;
     };
 
-    if(flagEnabled){
-        if(this.innerText == ""){
-            this.innerText = "🚩"
-        }
-        else if(this.innerText == "🚩"){
-            this.innerText = "";
-        }
-        return;
-    }
+    
     if(minesLocation.includes(this.id)){
         alert("GAME OVER");
         gameOver = true;
@@ -126,17 +151,10 @@ function revealMines(){
             }
         }
     }
+    document.getElementById("playAgainBtn").style.display = "block"
 }
 
-// function toggleFlag(){
-//     if(flagEnabled){
-//         flagEnabled = false;
-//         document.getElementById("flagBtn").style.backgroundColor = "lightGray";
-//     } else {
-//         flagEnabled = true;
-//         document.getElementById("flagBtn").style.backgroundColor = "darkGray";
-//     }
-// }
+
 
 function flagSquare(){
     if(this.classList.contains("clicked") || gameOver){
@@ -152,7 +170,6 @@ function flagSquare(){
 }
 
 function setMines(){
-
     let minesLeft = numMines;
     while (minesLeft > 0){
         let r = Math.floor(Math.random() * rows);
@@ -166,8 +183,21 @@ function setMines(){
     }
 }
 
+function setTimer(){
+    var timer = parseInt(document.getElementById("timer").innerText);
+    setInterval(function(){
+        timer++;
+        document.getElementById("timer").innerText = timer;
+    }, 1000)
+
+}
+
+
+
 document.addEventListener("DOMContentLoaded", function(){
+    document.getElementById("playAgainBtn").addEventListener("click", function(){
+        location.reload();
+    })
     document.getElementById("tilesRevealed").innerHTML = tilesRevealed;
-    startGame();
-    setMines();
+    setDifficulty();
 });
