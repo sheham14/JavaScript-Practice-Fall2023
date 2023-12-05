@@ -148,6 +148,7 @@ function revealMines(){
             if(minesLocation.includes(square.id)){
                 square.innerText = "💣";
                 square.style.backgroundColor = "red";
+                gameOver = true;
             }
         }
     }
@@ -183,13 +184,20 @@ function setMines(){
     }
 }
 
-function setTimer(){
-    var timer = parseInt(document.getElementById("timer").innerText);
-    setInterval(function(){
-        timer++;
-        document.getElementById("timer").innerText = timer;
-    }, 1000)
+var intervalId;
 
+function setTimer() {
+    var timerElement = document.getElementById("timer");
+
+    var timer = parseInt(timerElement.innerText) || 0;
+    intervalId = setInterval(function () {
+        if (!gameOver) {
+            timer++;
+            document.getElementById("timer").innerText = timer;
+        } else {
+            clearInterval(intervalId);
+        }
+    }, 1000);
 }
 
 
